@@ -6,7 +6,11 @@ var express = require('express'),
 Object.assign=require('object-assign')
 
 app.engine('html', require('ejs').renderFile);
-app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" Header/:req[header] :status :res[content-length] ":referrer" ":user-agent"'))
+
+app.use(function(req, res){
+    console.log("HTTP Headers: " + JSON.stringify(req.headers));
+});
+app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'))
 
 var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
@@ -113,10 +117,6 @@ app.get('/pagecount', function (req, res) {
 app.use(function(err, req, res, next){
   console.error(err.stack);
   res.status(500).send('Something bad happened!');
-});
-
-app.use(function(req, res){
-    console.log("HTTP Headers: " + JSON.stringify(req.headers));
 });
 
 initDb(function(err){
