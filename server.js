@@ -115,6 +115,10 @@ app.use(function(err, req, res, next){
   res.status(500).send('Something bad happened!');
 });
 
+app.use(function(req, res){
+    console.log("HTTP Headers: " + JSON.stringify(req.headers));
+});
+
 initDb(function(err){
   console.log('Error connecting to Mongo. Message:\n'+err);
 });
